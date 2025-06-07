@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { ProgressCard } from "./ProgressCard";
+import { getModeStyle } from "@/lib/modeStyle";
 
 export const QuestionBox = observer(() => {
   const [isClient, setIsClient] = useState(false);
@@ -15,20 +17,8 @@ export const QuestionBox = observer(() => {
     trainerStore.initialize();
   }, []);
 
-  const getModeStyle = (mode: string) => {
-    switch(mode) {
-      case 'multiply': 
-        return { background: 'linear-gradient(to right, #fbbf24, #f59e0b)' };
-      case 'divide': 
-        return { background: 'linear-gradient(to right, #10b981, #059669)' };
-      case 'mixed': 
-        return { background: 'linear-gradient(to right, #f97316, #dc2626, #fbbf24)' };
-      default: 
-        return { background: 'linear-gradient(to right, #8b5cf6, #7c3aed)' };
-    }
-  };
-
-  const badgeStyle = getModeStyle(trainerStore.mode);
+  const modeStyle = getModeStyle(trainerStore.mode);
+  const progress = trainerStore.getCurrentProgress();
 
   if (!isClient || !trainerStore.currentQuestion) {
     return (
@@ -83,6 +73,7 @@ export const QuestionBox = observer(() => {
 
   return (
     <div className="flex flex-col items-center justify-center relative z-10 px-2">
+      {/* Основная карточка с вопросом */}
       <Card className={`w-full max-w-sm sm:max-w-md lg:max-w-lg backdrop-blur-sm border-2 shadow-2xl relative overflow-hidden transition-all duration-500 ${
         trainerStore.feedback === "correct" 
           ? "bg-green-50 border-green-300" 
@@ -99,11 +90,11 @@ export const QuestionBox = observer(() => {
           {/* Дракон-помощник */}
           <div className="text-5xl sm:text-6xl lg:text-8xl mb-6 sm:mb-8 lg:mb-10 animate-bounce">🐲</div>
           
-          {/* Режим - показываем только если нет feedback с ПРАВИЛЬНЫМ ЦВЕТОМ */}
+          {/* Режим - показываем только если нет feedback */}
           {!trainerStore.feedback && (
             <Badge 
               className="text-white text-base sm:text-lg lg:text-xl px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 mb-6 sm:mb-8 lg:mb-10 border-0 mx-auto block text-center"
-              style={badgeStyle}
+              style={{ background: modeStyle.background }}
             >
               Реши пример
             </Badge>
@@ -160,18 +151,26 @@ export const QuestionBox = observer(() => {
         </CardContent>
       </Card>
       
-      {/* Подсказка - УСЛОВНАЯ */}
+      {/* Подсказка с КОМПАКТНЫМ прогрессом */}
       <Card className="mt-3 sm:mt-4 lg:mt-6 w-full max-w-sm sm:max-w-md bg-purple-800 border-purple-600 shadow-2xl">
         <CardContent className="p-3 sm:p-4">
-          <p className="text-sm sm:text-base lg:text-lg text-white text-center font-bold">
-            {trainerStore.feedback === "wrong" ? (
-              "💪 Попробуй еще раз, когда будешь готов!"
-            ) : trainerStore.feedback === "correct" ? (
-              "🚀 Приготовься к новому вызову!"
-            ) : (
-              "💡 Подумай хорошенько и введи ответ!"
-            )}
-          </p>
+          {trainerStore.feedback === "wrong" ? (
+            <p className="text-sm sm:text-base lg:text-lg text-white text-center font-bold">
+              💪 Попробуй еще раз, когда будешь готов!
+            </p>
+          ) : trainerStore.feedback === "correct" ? (
+            <p className="text-sm sm:text-base lg:text-lg text-white text-center font-bold">
+              🚀 Приготовься к новому вызову!
+            </p>
+          ) : (
+            <ProgressCard
+              current={progress.current}
+              total={progress.total}
+              percentage={progress.percentage}
+              modeStyle={modeStyle}
+              compact={true}
+            />
+          )}
         </CardContent>
       </Card>
     </div>
