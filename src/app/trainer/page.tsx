@@ -1,6 +1,5 @@
 'use client';
 import { QuestionBox } from "@/components/QuestionBox";
-import { ResultFeedback } from "@/components/ResultFeedback";
 import { trainerStore } from "@/stores/TrainerStore";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -80,7 +79,6 @@ export default function TrainerPage() {
 
       <div className="flex-1 flex flex-col justify-center w-full">
         <QuestionBox />
-        <ResultFeedback />
       </div>
       
       <div className="mt-4 sm:mt-6 relative z-10 space-y-3 sm:space-y-4">

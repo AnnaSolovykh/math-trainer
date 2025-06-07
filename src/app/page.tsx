@@ -10,20 +10,6 @@ export default function Home() {
     router.push(`/trainer?mode=${mode}`);
   };
 
-  // Функция для получения стилей кнопок
-  const getButtonStyle = (mode: string) => {
-    switch(mode) {
-      case 'multiply': 
-        return { background: 'linear-gradient(to right, #fbbf24, #f59e0b)' };
-      case 'divide': 
-        return { background: 'linear-gradient(to right, #10b981, #059669)' };
-      case 'mixed': 
-        return { background: 'linear-gradient(to right, #f97316, #dc2626, #fbbf24)' };
-      default: 
-        return { background: 'linear-gradient(to right, #8b5cf6, #7c3aed)' };
-    }
-  };
-
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-700 flex flex-col items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute top-4 left-4 w-12 h-12 sm:top-8 sm:left-8 sm:w-16 sm:h-16 lg:top-10 lg:left-10 lg:w-20 lg:h-20 bg-yellow-400 rounded-full opacity-20 animate-bounce"></div>
